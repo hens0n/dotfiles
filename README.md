@@ -12,13 +12,6 @@
 apt-get install stow
 ```
 
-### Mac
-
-
-```shell
-apt-get install stow
-```
-
 Then simply use stow to install the dotfiles you want to use:
 
 ```shell
