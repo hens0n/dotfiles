@@ -97,7 +97,31 @@ require("lazy").setup({
       end,
     },
   
-    -- LSP support (pyright for Python)
+    -- Mason: Package manager for LSPs, linters, and formatters
+    {
+      "williamboman/mason.nvim",
+      config = function()
+        require("mason").setup({
+          ui = {
+            border = "single", -- Matches which-key if you add it later
+          },
+        })
+      end,
+    },
+  
+    -- Mason-LSPconfig: Bridge between Mason and lspconfig
+    {
+      "williamboman/mason-lspconfig.nvim",
+      dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" },
+      config = function()
+        require("mason-lspconfig").setup({
+          ensure_installed = { "lua_ls", "pyright" }, -- Automatically install these LSPs
+          automatic_installation = true, -- Install LSPs when needed
+        })
+      end,
+    },
+  
+    -- LSP support (pyright for Python, lua_ls for Lua)
     {
       "neovim/nvim-lspconfig",
       dependencies = { "hrsh7th/cmp-nvim-lsp" },
@@ -105,6 +129,7 @@ require("lazy").setup({
         local lspconfig = require("lspconfig")
         local capabilities = require("cmp_nvim_lsp").default_capabilities()
   
+        -- Lua LSP
         lspconfig.lua_ls.setup({
           capabilities = capabilities,
           settings = {
@@ -114,6 +139,7 @@ require("lazy").setup({
           },
         })
   
+        -- Python LSP (pyright)
         lspconfig.pyright.setup({
           capabilities = capabilities,
           settings = {
@@ -141,7 +167,7 @@ require("lazy").setup({
               extra_args = { "--line-length", "88" },
             }),
             null_ls.builtins.diagnostics.flake8.with({
-              extra_args = { "--max-line-length", "88" }, -- Match black's line length
+              extra_args = { "--max-line-length", "88" },
             }),
           },
         })
